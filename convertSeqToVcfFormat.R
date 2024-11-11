@@ -1,4 +1,6 @@
-# 
+#### This script converts aligned sequences of variants from allelic frequency table to VCF format 
+
+
 library(Biostrings)
 library(VariantAnnotation)
 library(GenomicRanges)
