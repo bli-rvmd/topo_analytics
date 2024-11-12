@@ -3,13 +3,13 @@
 ##############
 
 ## data folder 
-data_folder <- "./data/KPTC_ElimBio_order_861172_TOPO_cdkn2a_cic_nutlin_09192024/"
-sub_data_folder <- "pcr_47"
-delim_clone <- c("_6-", "_M13-") ## delimiters identifying clone number
+data_folder <- "./data/20240917_TOPO_ElimBio_order_8670874_cdkn2a_2b_Mtap_large_deletion//"
+sub_data_folder <- "pcr_33"
+delim_clone <- c("_3-", "_M13-") ## delimiters identifying clone number
 
 ## PCR primers 
-fwd_primer <- toupper("GTGTTAACTGCAGCGGGAGA")
-rev_primer <- toupper("TCGGTCCTTGTTGCACCATT")
+fwd_primer <- toupper("AGAACTGGCAGTAATGCGCT")
+rev_primer <- toupper("CCACCCCACTAGAAACGTCA")
 
 if_allow_one_N <- T
 
