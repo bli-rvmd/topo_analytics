@@ -1,5 +1,20 @@
 #### This script converts aligned sequences of variants from allelic frequency table to VCF format 
 
+#########
+# Begin setting runtime parameters
+#########
+
+# min frequency alleles to keep (by default 0.5%) 
+min_perc_reads <- 0.5 
+
+allelic_freq_table_txt <- "./data/temp/Cellecta_cdkn2a_Alleles_frequency_table_around_sgRNA_GTCGAGCGGCAGGCGACCCC.txt"
+
+#########
+# End setting runtime parameters
+#########
+
+
+####################### !!! DO NOT CHANGE ANYTHING BELOW !!! ###########################
 
 library(Biostrings)
 library(VariantAnnotation)
@@ -99,20 +114,7 @@ find.mouse.gene.canonical.transcript <- function(gene_symbol) {
 }
 
 
-## step 0 - read in a test file and QC
-# min frequency alleles to keep (by default 0.5%) 
-min_perc_reads <- 0.5 
-
-
-# allelic_freq_table_txt <- "./data/temp/topo_pcr_60_cic_2D_Alleles_frequency_table_around_sgRNA_GAAGCAGAAATACCACGACC.txt" # pcr_60 cic 2D (large delections and point mutation)
-# allelic_freq_table_txt <- "./data/temp/topo_pcr_58_cdkn2a_2D_Alleles_frequency_table_around_sgRNA_CGGTGCAGATTCGAACTGCG.txt" # pcr_58 cdkn2a 2D (small deletion and small insertion)
-# Cellecta Order# 101888 Smad4 KO
-# allelic_freq_table_txt <- "./data/temp/Cellecta_smad4_KO_Alleles_frequency_table_around_sgRNA_TGTCACCATACAGAGAACAT.txt"
-# Cellecta Order# 101888 Trp53 KO
-# allelic_freq_table_txt <- "./data/temp/Cellecta_trp53_Alleles_frequency_table_around_sgRNA_GACCCTGTCACCGAGACCCC.txt"
-# Cellecta Order# 101888 Cdkn2a KO
-allelic_freq_table_txt <- "./data/temp/Cellecta_cdkn2a_Alleles_frequency_table_around_sgRNA_GTCGAGCGGCAGGCGACCCC.txt"
-
+## input data processing
 # change colnames of allele freq table txt file
 df_af <- read.delim(allelic_freq_table_txt, header = T, sep = "\t")
 colnames(df_af)[(ncol(df_af) - 1):ncol(df_af)] <- c("n_reads", "perc_reads")
@@ -346,37 +348,4 @@ write.table(df_res_output,
             sep = "\t", 
             row.names = FALSE, 
             quote = FALSE)
-
-
-##################### TEST BELOW #######################
-
-stop()
-
-## query reference seq
-res_query <- data.frame()
-
-for (chr in seqnames(GRCm39)) {
-  chr_sequence <- GRCm39[[chr]]  # Get the chromosome sequence
-  
-  # Find matches (note to remove '-' from reference)
-  match_positions <- matchPattern(gsub('-', '', reference), chr_sequence)
-  
-  if (length(match_positions) > 0) {
-    print(paste("Found match on chromosome", chr))
-    print(match_positions)
-    
-    res_query <- rbind(res_query, c(chr, start(match_positions), end(match_positions)))
-  }
-}
-
-colnames(res_query) <- c("chr", "start", "end")
-
-
-## find diffs
-mismatch_pos <- which(reference != mutated)
-
-
-
-
-
 
