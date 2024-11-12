@@ -9,6 +9,8 @@ min_perc_reads <- 0.5
 
 allelic_freq_table_txt <- "./data/temp/Cellecta_cdkn2a_Alleles_frequency_table_around_sgRNA_GTCGAGCGGCAGGCGACCCC.txt"
 
+output_vcf <- file.path("./data/temp", sub("\\.txt$", ".vcf", paste0("VCF_", basename(allelic_freq_table_txt))))
+
 #########
 # End setting runtime parameters
 #########
