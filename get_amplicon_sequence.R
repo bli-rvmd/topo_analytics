@@ -2,8 +2,8 @@
 # Begin setting runtime parameters
 #################
 
-fwd_primer <- toupper("GTGTTAACTGCAGCGGGAGA")
-rev_primer <- toupper("TCGGTCCTTGTTGCACCATT")
+fwd_primer <- toupper("AGAACTGGCAGTAATGCGCT")
+rev_primer <- toupper("GTGTTTCCTGGGCTCCGTTA")
 
 #################
 # End setting runtime parameters
@@ -43,7 +43,8 @@ find.seq.match.grcm39 <- function(dna_seq) {
     
     chr_sequence <- GRCm39[[chr]]
     
-    print(paste0(idx, ": ", chr))
+    # print(paste0(idx, ": ", chr))
+    print(chr)
     
     # find matches of chr_sequence
     match_positions <- Biostrings::matchPattern(dna_seq, chr_sequence)

@@ -7,9 +7,9 @@
 # min frequency alleles to keep (by default 0.5%) 
 min_perc_reads <- 0.5 
 
-allelic_freq_table_txt <- "./data/temp/Cellecta_cdkn2a_Alleles_frequency_table_around_sgRNA_GTCGAGCGGCAGGCGACCCC.txt"
+allelic_freq_table_txt <- "/Users/bli/Docker/20240919_KPTC_ElimBio_order_861172_TOPO_cdkn2a_cic_nutlin/pcr_41/CRISPResso_on_pcr_41_filtered_seqs_all/Alleles_frequency_table_around_sgRNA_CGGTGCAGATTCGAACTGCG.txt"
 
-output_vcf <- file.path("./data/temp", sub("\\.txt$", ".vcf", paste0("VCF_", basename(allelic_freq_table_txt))))
+output_vcf <- "/Users/bli/Docker/20240919_KPTC_ElimBio_order_861172_TOPO_cdkn2a_cic_nutlin/pcr_41/CRISPResso_on_pcr_41_filtered_seqs_all/VCF_Alleles_frequency_table_around_sgRNA_CGGTGCAGATTCGAACTGCG.vcf"
 
 #########
 # End setting runtime parameters
@@ -56,7 +56,8 @@ find.seq.match.grcm39 <- function(dna_seq) {
     
     chr_sequence <- GRCm39[[chr]]
     
-    print(paste0(idx, ": ", chr))
+    # print(paste0(idx, ": ", chr))
+    print(chr)
     
     # find matches of chr_sequence
     match_positions <- Biostrings::matchPattern(dna_seq, chr_sequence)

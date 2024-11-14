@@ -11,11 +11,15 @@ delim_clone <- c("_3-", "_M13-") ## delimiters identifying clone number
 fwd_primer <- toupper("AGAACTGGCAGTAATGCGCT")
 rev_primer <- toupper("CCACCCCACTAGAAACGTCA")
 
+# # if no trimming - use these
+# fwd_primer <- strrep("T", 100)
+# rev_primer <- strrep("T", 100)
+
 if_allow_one_N <- T
 
 ## number of bps to trim at beginning and end
 n_trim_begin <- 20
-n_trim_end <- 200
+n_trim_end <- 100
 
 ## qc threshold of %_N's in each of trimmed sequences
 thres_perc_N <- 0.10 
