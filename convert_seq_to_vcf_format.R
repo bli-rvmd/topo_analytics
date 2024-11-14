@@ -7,9 +7,9 @@
 # min frequency alleles to keep (by default 0.5%) 
 min_perc_reads <- 0.5 
 
-allelic_freq_table_txt <- "/Users/bli/Docker/20240919_KPTC_ElimBio_order_861172_TOPO_cdkn2a_cic_nutlin/pcr_47/CRISPResso_on_pcr_47_filtered_seqs_all/Alleles_frequency_table_around_sgRNA_GAAGCAGAAATACCACGACC.txt"
+allelic_freq_table_txt <- "/Users/bli/Docker/20241024_ElimBio_Order_864502_TOPO_Smad4_3D/pcr_14_topo_21_M13_F/CRISPResso_on_pcr_14_filtered_seqs_all/Alleles_frequency_table_around_sgRNA_GATGTGTCATAGACAAGGTG.txt"
 
-output_vcf <- "/Users/bli/Docker/20240919_KPTC_ElimBio_order_861172_TOPO_cdkn2a_cic_nutlin/pcr_47/CRISPResso_on_pcr_47_filtered_seqs_all/VCF_Alleles_frequency_table_around_sgRNA_GAAGCAGAAATACCACGACC.vcf"
+output_vcf <- "/Users/bli/Docker/20241024_ElimBio_Order_864502_TOPO_Smad4_3D/pcr_14_topo_21_M13_F/CRISPResso_on_pcr_14_filtered_seqs_all/VCF_Alleles_frequency_table_around_sgRNA_GATGTGTCATAGACAAGGTG.vcf"
 
 #########
 # End setting runtime parameters

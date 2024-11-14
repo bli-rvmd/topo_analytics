@@ -4,14 +4,13 @@
 # Begin setting runtime parameters
 #########
 
-vcf_file <- "/Users/bli/Docker/20240919_KPTC_ElimBio_order_861172_TOPO_cdkn2a_cic_nutlin/pcr_41/CRISPResso_on_pcr_41_filtered_seqs_all/VCF_Alleles_frequency_table_around_sgRNA_CGGTGCAGATTCGAACTGCG.vcf"
+vcf_file <- "/Users/bli/Docker/20241024_ElimBio_Order_864502_TOPO_Smad4_3D/pcr_14_topo_21_M13_F/CRISPResso_on_pcr_14_filtered_seqs_all/VCF_Alleles_frequency_table_around_sgRNA_GATGTGTCATAGACAAGGTG.vcf"
 
-vep_file <- "/Users/bli/Docker/20240919_KPTC_ElimBio_order_861172_TOPO_cdkn2a_cic_nutlin/pcr_41/CRISPResso_on_pcr_41_filtered_seqs_all/VEP_Alleles_frequency_table_around_sgRNA_CGGTGCAGATTCGAACTGCG.txt"
+vep_file <- "/Users/bli/Docker/20241024_ElimBio_Order_864502_TOPO_Smad4_3D/pcr_14_topo_21_M13_F/CRISPResso_on_pcr_14_filtered_seqs_all/VEP_Alleles_frequency_table_around_sgRNA_GATGTGTCATAGACAAGGTG.txt"
 
-gene_symbol <- "Cdkn2a"
+gene_symbol <- "Smad4"
 
-output_summary_xlsx_file <- "/Users/bli/Docker/20240919_KPTC_ElimBio_order_861172_TOPO_cdkn2a_cic_nutlin/pcr_41/CRISPResso_on_pcr_41_filtered_seqs_all/topo_17_sequencing_validation_analysis_report.xlsx"
-
+output_summary_xlsx_file <- "/Users/bli/Docker/20241024_ElimBio_Order_864502_TOPO_Smad4_3D/pcr_14_topo_21_M13_F/CRISPResso_on_pcr_14_filtered_seqs_all/topo_21_sequencing_validation_analysis_report.xlsx"
 
 #########
 # End setting runtime parameters
@@ -113,6 +112,18 @@ df_summary <- df %>%
 ## rename sum_ratio... into %_edited...
 colnames(df_summary) <- gsub("^sum\\_ratio", "Percent\\_Edited_Impact", colnames(df_summary))
 colnames(df_summary) <- gsub("\\_Impact$", "", colnames(df_summary))
+
+## cap percentage of df_summary
+cap_percent <- function(column) {
+  # Remove the '%' sign and convert to numeric
+  numeric_values <- as.numeric(sub("%", "", column))
+  # Cap values at 100
+  capped_values <- pmin(numeric_values, 100)
+  # Convert back to strings with '%'
+  return(paste0(capped_values, "%"))
+}
+
+df_summary[-1] <- lapply(df_summary[-1], cap_percent)
 
 ## output df and df_summary to sequencing_validation_analysis_report
 # create a new workbook
