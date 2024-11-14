@@ -347,7 +347,7 @@ df_res_output <- df_res_merged %>%
 
 ## output df_res_output in VCF format
 write.table(df_res_output, 
-            file = file.path("./data/temp", sub("\\.txt$", ".vcf", paste0("VCF_", basename(allelic_freq_table_txt)))), 
+            file = output_vcf, 
             sep = "\t", 
             row.names = FALSE, 
             quote = FALSE)
