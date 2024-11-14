@@ -199,7 +199,7 @@ df_res <- do.call(rbind, lapply(1:nrow(df_af), function(idx) {
     v_res <- c(
       res_seq_query$chr, #CHROM
       position, # POS
-      paste0("del-", del_size), # ID
+      paste0("del-", del_size, "_", position), # ID
       as.character(Biostrings::getSeq(GRCm39, # REF by getting seq from GRCm39
                                       res_seq_query$chr, 
                                       position, 
@@ -253,7 +253,7 @@ df_res <- do.call(rbind, lapply(1:nrow(df_af), function(idx) {
     v_res <- c(
       res_seq_query$chr, # CHROM
       position, # POS
-      paste0("ins+", ins_size), # ID
+      paste0("ins+", ins_size, "_", position), # ID
       as.character(Biostrings::getSeq(GRCm39,  # REF 
                                       res_seq_query$chr, 
                                       position, 
@@ -304,7 +304,7 @@ df_res <- do.call(rbind, lapply(1:nrow(df_af), function(idx) {
     v_res <- c(
       res_seq_query$chr, #CHROM
       position, # POS
-      paste0(sg_ref_chars[diff_pos], "->", sg_mut_chars[diff_pos]), # ID
+      paste0(sg_ref_chars[diff_pos], "->", sg_mut_chars[diff_pos], "_", position), # ID
       as.character(Biostrings::getSeq(GRCm39, # REF
                                       res_seq_query$chr, 
                                       position, 

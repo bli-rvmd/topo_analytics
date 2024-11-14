@@ -4,13 +4,13 @@
 # Begin setting runtime parameters
 #########
 
-vcf_file <- "./data/temp/VCF_topo_pcr_58_cdkn2a_2D_Alleles_frequency_table_around_sgRNA_CGGTGCAGATTCGAACTGCG.vcf"
+vcf_file <- "/Users/bli/Docker/20240919_KPTC_ElimBio_order_861172_TOPO_cdkn2a_cic_nutlin/pcr_41/CRISPResso_on_pcr_41_filtered_seqs_all/VCF_Alleles_frequency_table_around_sgRNA_CGGTGCAGATTCGAACTGCG.vcf"
 
-vep_file <- "./data/temp/cdkn2a_2D_VEP_from_VCF.txt"
+vep_file <- "/Users/bli/Docker/20240919_KPTC_ElimBio_order_861172_TOPO_cdkn2a_cic_nutlin/pcr_41/CRISPResso_on_pcr_41_filtered_seqs_all/VEP_Alleles_frequency_table_around_sgRNA_CGGTGCAGATTCGAACTGCG.txt"
 
 gene_symbol <- "Cdkn2a"
 
-output_summary_xlsx_file <- file.path("./data/temp", paste0(gene_symbol, "_sequencing_validation_analysis_report.xlsx"))
+output_summary_xlsx_file <- "/Users/bli/Docker/20240919_KPTC_ElimBio_order_861172_TOPO_cdkn2a_cic_nutlin/pcr_41/CRISPResso_on_pcr_41_filtered_seqs_all/topo_17_sequencing_validation_analysis_report.xlsx"
 
 
 #########
