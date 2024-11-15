@@ -23,6 +23,7 @@ library(VariantAnnotation)
 library(GenomicRanges)
 library(biomaRt)
 library(dplyr)
+library(stringr)
 
 ## load GRCm39 mouse genome assembly 2020
 library(BSgenome.Mmusculus.UCSC.mm39)
@@ -343,7 +344,41 @@ df_res_merged <- df_res %>%
 df_af_unedited <- df_af %>%
   dplyr::filter(Unedited == "True")
 
-n_unedited_reads <- sum(as.integer(df_af_unedited$n_reads))
+
+## allow up to two N's in sgRNA region of aligned_sequence for an unedited read, filtering out if there are >2 Ns 
+n_unedited_reads <- 0
+max_allowed_Ns <- 2
+
+for (idx in 1:nrow(df_af_unedited)) {
+  
+  ## define ref and mutated seqs
+  mutated <- DNAString(df_af_unedited$Aligned_Sequence[idx])
+  reference <- DNAString(df_af_unedited$Reference_Sequence[idx])
+  
+  # find index of sgRNA in reference seq (either in sgRNA_seq or in reverse complement of sgRNA_seq)
+  sg_idx_in_ref <- Biostrings::matchPattern(sgRNA_seq, reference)
+  if (length(sg_idx_in_ref) == 0) {
+    
+    sg_idx_in_ref <- Biostrings::matchPattern(Biostrings::reverseComplement(Biostrings::DNAString(sgRNA_seq)), reference)
+    
+  }
+  
+  start_idx <- start(sg_idx_in_ref) 
+  end_idx <- end(sg_idx_in_ref)
+  
+  # obtain mutated and ref seqs around sgRNA
+  sg_mut_seq <- substr(as.character(mutated), start_idx, end_idx)
+  
+  count_N <- stringr::str_count(sg_mut_seq, "N")
+  
+  if (count_N <= max_allowed_Ns) {
+    n_unedited_reads <- n_unedited_reads + df_af_unedited[idx, "n_reads"]
+  }
+  
+}
+
+# n_unedited_reads <- sum(as.integer(df_af_unedited$n_reads))
+
 n_edited_reads <- sum(as.integer(df_res_merged$INFO))
 n_total_reads <- n_unedited_reads + n_edited_reads
 
