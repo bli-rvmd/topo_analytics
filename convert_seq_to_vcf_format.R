@@ -7,9 +7,9 @@
 # min frequency alleles to keep (by default 0.5%) 
 min_perc_reads <- 0.5 
 
-allelic_freq_table_txt <- "/Users/bli/Docker/20241024_ElimBio_Order_864502_TOPO_Smad4_3D/pcr_14_topo_21_M13_F/CRISPResso_on_pcr_14_filtered_seqs_all/Alleles_frequency_table_around_sgRNA_GATGTGTCATAGACAAGGTG.txt"
+allelic_freq_table_txt <- "/Users/bli/Docker/20240905_TOPO_ElimBio_order_859749/topo_9_pcr_15_smad4/CRISPResso_on_topo_9_pcr_15_smad4_filtered_seqs_all/Alleles_frequency_table_around_sgRNA_GATGTGTCATAGACAAGGTG.txt"
 
-output_vcf <- "/Users/bli/Docker/20241024_ElimBio_Order_864502_TOPO_Smad4_3D/pcr_14_topo_21_M13_F/CRISPResso_on_pcr_14_filtered_seqs_all/VCF_Alleles_frequency_table_around_sgRNA_GATGTGTCATAGACAAGGTG.vcf"
+output_vcf <- "/Users/bli/Docker/20240905_TOPO_ElimBio_order_859749/topo_9_pcr_15_smad4/CRISPResso_on_topo_9_pcr_15_smad4_filtered_seqs_all/VCF_Alleles_frequency_table_around_sgRNA_GATGTGTCATAGACAAGGTG.vcf"
 
 #########
 # End setting runtime parameters
@@ -273,8 +273,13 @@ df_res <- do.call(rbind, lapply(1:nrow(df_af), function(idx) {
   ## if there's a SNP in mutated seq 
   if (df_af[idx, "n_mutated"] != 0) {
     
-    # find index of sgRNA in reference seq
+    # find index of sgRNA in reference seq (either in sgRNA_seq or in reverse complement of sgRNA_seq)
     sg_idx_in_ref <- Biostrings::matchPattern(sgRNA_seq, reference)
+    if (length(sg_idx_in_ref) == 0) {
+      
+      sg_idx_in_ref <- Biostrings::matchPattern(Biostrings::reverseComplement(Biostrings::DNAString(sgRNA_seq)), reference)
+      
+    }
     
     n_offset_bp <- 3 # N bps beyond sgRNA both 3' and 5' ends to be considered as quantifying region, set 3 as default
     

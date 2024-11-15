@@ -3,13 +3,13 @@
 ##############
 
 ## data folder 
-data_folder <- "./data/20240917_TOPO_ElimBio_order_8670874_cdkn2a_2b_Mtap_large_deletion//"
-sub_data_folder <- "pcr_33"
+data_folder <- "./data/KPTC_ElimBio_09052024_859749/"
+sub_data_folder <- "topo_9_pcr_15_smad4"
 delim_clone <- c("_3-", "_M13-") ## delimiters identifying clone number
 
 ## PCR primers 
-fwd_primer <- toupper("AGAACTGGCAGTAATGCGCT")
-rev_primer <- toupper("CCACCCCACTAGAAACGTCA")
+fwd_primer <- toupper("GGCCAGCATGGAGTAAGACC")
+rev_primer <- toupper("GGAATGCTCTCTTCTCGCCT")
 
 # # if no trimming - use these
 # fwd_primer <- strrep("T", 100)
@@ -19,7 +19,7 @@ if_allow_one_N <- T
 
 ## number of bps to trim at beginning and end
 n_trim_begin <- 20
-n_trim_end <- 100
+n_trim_end <- 200
 
 ## qc threshold of %_N's in each of trimmed sequences
 thres_perc_N <- 0.10 

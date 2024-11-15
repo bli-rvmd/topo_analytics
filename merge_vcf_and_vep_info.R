@@ -4,13 +4,13 @@
 # Begin setting runtime parameters
 #########
 
-vcf_file <- "/Users/bli/Docker/20241024_ElimBio_Order_864502_TOPO_Smad4_3D/pcr_14_topo_21_M13_F/CRISPResso_on_pcr_14_filtered_seqs_all/VCF_Alleles_frequency_table_around_sgRNA_GATGTGTCATAGACAAGGTG.vcf"
+vcf_file <- "/Users/bli/Docker/20240905_TOPO_ElimBio_order_859749/topo_10_pcr_7_cdkn2a/CRISPResso_on_topo_10_pcr_7_cdkn2a_filtered_seqs_all/VCF_Alleles_frequency_table_around_sgRNA_CGGTGCAGATTCGAACTGCG.vcf"
 
-vep_file <- "/Users/bli/Docker/20241024_ElimBio_Order_864502_TOPO_Smad4_3D/pcr_14_topo_21_M13_F/CRISPResso_on_pcr_14_filtered_seqs_all/VEP_Alleles_frequency_table_around_sgRNA_GATGTGTCATAGACAAGGTG.txt"
+vep_file <- "/Users/bli/Docker/20240905_TOPO_ElimBio_order_859749/topo_10_pcr_7_cdkn2a/CRISPResso_on_topo_10_pcr_7_cdkn2a_filtered_seqs_all/VEP_Alleles_frequency_table_around_sgRNA_CGGTGCAGATTCGAACTGCG.txt"
 
-gene_symbol <- "Smad4"
+gene_symbol <- "Cdkn2a"
 
-output_summary_xlsx_file <- "/Users/bli/Docker/20241024_ElimBio_Order_864502_TOPO_Smad4_3D/pcr_14_topo_21_M13_F/CRISPResso_on_pcr_14_filtered_seqs_all/topo_21_sequencing_validation_analysis_report.xlsx"
+output_summary_xlsx_file <- "/Users/bli/Docker/20240905_TOPO_ElimBio_order_859749/topo_10_pcr_7_cdkn2a/CRISPResso_on_topo_10_pcr_7_cdkn2a_filtered_seqs_all/topo_10_sequencing_validation_analysis_report.xlsx"
 
 #########
 # End setting runtime parameters
