@@ -3,9 +3,9 @@
 ##############
 
 ## data folder 
-data_folder <- "./data/KPTC_ElimBio_09052024_859749/"
-sub_data_folder <- "topo_9_pcr_15_smad4"
-delim_clone <- c("_3-", "_M13-") ## delimiters identifying clone number
+data_folder <- "./data/ElimBio order 866706_111424_TOPO AP009_Smad4_Null Smad4/"
+sub_data_folder <- "topo_35_pcr_78"
+delim_clone <- c("_1-", "_M13-") ## delimiters identifying clone number
 
 ## PCR primers 
 fwd_primer <- toupper("GGCCAGCATGGAGTAAGACC")
@@ -330,6 +330,19 @@ for (s in seqs_all) {
     filtered_seqs_all <- c(filtered_seqs_all, s)
   }
 }
+
+## further filter out seqs_all by new QC of removing potential primer dimers
+# FIXME! wrap up function of finding_amplicon, then take to various scenarios of s beginning with fwd_primer, rev_primer, rc(fwd) or rc(rev)
+
+filtered_seqs_all_qc <- c()
+
+for (s in filtered_seqs_all) {
+  
+  # if s begins with fwd_primer
+  
+}
+
+
 
 create_fastq_file_from_seqs(filtered_seqs_all, output_file_name = paste0(data_folder, sub_data_folder, "/", sub_data_folder, "_filtered_seqs_all.fastq"))
 

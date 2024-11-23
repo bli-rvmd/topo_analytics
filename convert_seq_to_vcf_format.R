@@ -7,9 +7,9 @@
 # min frequency alleles to keep (by default 0.5%) 
 min_perc_reads <- 0.5 
 
-allelic_freq_table_txt <- "/Users/bli/Docker/20240905_TOPO_ElimBio_order_859749/topo_9_pcr_15_smad4/CRISPResso_on_topo_9_pcr_15_smad4_filtered_seqs_all/Alleles_frequency_table_around_sgRNA_GATGTGTCATAGACAAGGTG.txt"
+allelic_freq_table_txt <- "/Users/bli/Docker/20241011_Cellecta_NGS_cdkn2a_cic/cdkn2a_low_sorted/CRISPResso_on_16_S16_R1_001/Alleles_frequency_table_around_sgRNA_CGGTGCAGATTCGAACTGCG.txt"
 
-output_vcf <- "/Users/bli/Docker/20240905_TOPO_ElimBio_order_859749/topo_9_pcr_15_smad4/CRISPResso_on_topo_9_pcr_15_smad4_filtered_seqs_all/VCF_Alleles_frequency_table_around_sgRNA_GATGTGTCATAGACAAGGTG.vcf"
+output_vcf <- "/Users/bli/Docker/20241011_Cellecta_NGS_cdkn2a_cic/cdkn2a_low_sorted/CRISPResso_on_16_S16_R1_001/VCF_Alleles_frequency_table_around_sgRNA_CGGTGCAGATTCGAACTGCG.vcf"
 
 #########
 # End setting runtime parameters
@@ -273,6 +273,13 @@ df_res <- do.call(rbind, lapply(1:nrow(df_af), function(idx) {
   
   ## if there's a SNP in mutated seq 
   if (df_af[idx, "n_mutated"] != 0) {
+    
+    if (sum(unlist(strsplit(as.character(mutated), "")) == "-") != 0 | sum(unlist(strsplit(as.character(reference), "")) == "-") != 0) {
+      
+      print("Skipping - unexpected deletion appears in mutated sequence!")
+      return(c())
+      
+    }
     
     # find index of sgRNA in reference seq (either in sgRNA_seq or in reverse complement of sgRNA_seq)
     sg_idx_in_ref <- Biostrings::matchPattern(sgRNA_seq, reference)
