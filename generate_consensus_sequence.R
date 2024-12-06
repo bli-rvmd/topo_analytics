@@ -35,6 +35,15 @@ library(seqinr)
 library(Biostrings)
 library(stringr)
 
+# Load the necessary libraries
+library(BSgenome)
+# library(BSgenome.Mmusculus.UCSC.mm10) # Mouse genome assembly (mm10)
+library(BSgenome.Mmusculus.UCSC.mm39) # Mouse genome assembly (mm39 2020)
+library(rtracklayer)
+
+# Define the mouse genome object
+GRCm39 <- BSgenome.Mmusculus.UCSC.mm39
+
 ##############
 ## TOPO sequence Trimming logic
 # step 1 - identify if either primer can find exact match to find directionality of the sequence
@@ -195,23 +204,58 @@ apply_seq_trimming <- function(ref_seq, # reference sequence to apply trimming o
 }
   
 
-## obtain amplicon sequence
-# amplicon_seq <- readDNAStringSet(amplicon_fasta_file)[1]
-
-# # categorize cases
-# case_counts <- list(
-#   "forward_in_rc_reverse_in" = 0, # usual cases
-#   "reverse_in_rc_forward_in" = 0, 
-#   
-#   "forward_in_rc_reverse_out" = 0, # edge case #1
-#   "reverse_in_rc_forward_out" = 0, 
-#   
-#   "forward_out_rc_reverse_in" = 0, # edge case #2
-#   "reverse_out_rc_forward_in" = 0, 
-#   
-#   "forward_out_rc_reverse_out" = 0, # edge case #3
-#   "reverse_out_rc_forward_out" = 0
-# )
+## find matches of a seq in GRCm39
+find.seq.match.grcm39 <- function(dna_seq) {
+  
+  # reverse complement of dna_seq
+  rev_dna_seq <- Biostrings::reverseComplement(Biostrings::DNAString(dna_seq))
+  
+  # find matches of reference seq in GRCm39
+  res_seq_query <- data.frame()
+  
+  chrs <- GenomeInfoDb::seqnames(GRCm39)
+  
+  for (chr in chrs[!grepl("_", chrs)]) {
+    
+    chr_sequence <- GRCm39[[chr]]
+    
+    # print(paste0(idx, ": ", chr))
+    print(chr)
+    
+    # find matches of chr_sequence
+    match_positions <- Biostrings::matchPattern(dna_seq, chr_sequence)
+    
+    if (length(match_positions) > 0) {
+      print(paste("Found match on chromosome", chr))
+      print(match_positions)
+      
+      res_seq_query <- rbind(res_seq_query, c(chr, start(match_positions), end(match_positions)))
+    }
+    
+    # find for reverse complement of dna_seq
+    match_positions_rev <- Biostrings::matchPattern(rev_dna_seq, chr_sequence)
+    
+    if (length(match_positions_rev) > 0) {
+      print(paste("Found match of reverse complement on chromosome", chr))
+      print(match_positions_rev)
+      
+      res_seq_query <- rbind(res_seq_query, c(chr, start(match_positions_rev), end(match_positions_rev)))
+    }
+    
+  }
+  
+  colnames(res_seq_query) <- c("chr", "start", "end") 
+  
+  return (res_seq_query)
+  # 
+  # # stop if there are multiple matches of a reference sequence
+  # if (nrow(res_seq_query) != 1) {
+  #   
+  #   print(res_seq_query)
+  #   stop(paste0("Check row ", idx, " of sequence that it has multiple matches in the GRCm39 genome!\n"))
+  # }
+  # 
+}
 
 ## traverse data folder identifying clones
 seq_files <- list.files(path = file.path(data_folder, sub_data_folder), pattern = "\\.seq$", full.names = TRUE)
@@ -331,14 +375,157 @@ for (s in seqs_all) {
   }
 }
 
-## further filter out seqs_all by new QC of removing potential primer dimers
+####
+# further filter out seqs_all by new QC of removing potential primer dimers
+####
+
 # FIXME! wrap up function of finding_amplicon, then take to various scenarios of s beginning with fwd_primer, rev_primer, rc(fwd) or rc(rev)
 
 filtered_seqs_all_qc <- c()
+n_bps_to_align <- 5
+count_primer_dimers <- 0
 
-for (s in filtered_seqs_all) {
+## fwd_ and rev_primers seq matches
+fp_seq_match <- find.seq.match.grcm39(fwd_primer)
+rp_seq_match <- find.seq.match.grcm39(rev_primer)
+
+## fwd_ and rev_primers getSeq(...)
+fp_getSeq <- as.character(Biostrings::getSeq(GRCm39, 
+                                names = fp_seq_match$chr, 
+                                start = as.integer(fp_seq_match$start), 
+                                end = as.integer(fp_seq_match$end)))
+rp_getSeq <- as.character(Biostrings::getSeq(GRCm39, 
+                                names = rp_seq_match$chr, 
+                                start = as.integer(rp_seq_match$start), 
+                                end = as.integer(rp_seq_match$end)))
+
+## directionality (5' -> 3' or 3' to 5') of fwd and rev primers
+if (fwd_primer == fp_getSeq) { # fwd_primer is in 5' to 3' direction
   
-  # if s begins with fwd_primer
+  fp_direction <- '5to3' 
+  fp_seq_plus_nbp <- as.character(Biostrings::getSeq(GRCm39, 
+                                                     names = fp_seq_match$chr, 
+                                                     start = as.integer(fp_seq_match$start), 
+                                                     end = as.integer(fp_seq_match$end) + n_bps_to_align))
+  
+} else if (fwd_primer == find_reverse_complement(fp_getSeq)) { # fwd_primer is in 3' to 5' direction
+  
+  fp_direction <- '3to5'
+  fp_seq_plus_nbp <- as.character(Biostrings::getSeq(GRCm39, 
+                                                     names = fp_seq_match$chr, 
+                                                     start = as.integer(fp_seq_match$start) - n_bps_to_align, 
+                                                     end = as.integer(fp_seq_match$end)))
+  
+  
+} else {
+  stop("check fwd_primer sequence that neither itself nor its reverse complement can find exact match in GRCm39!")
+}
+
+if (rev_primer == rp_getSeq) { # rev_primer is in 5' to 3' direction
+  
+  rp_direction <- '5to3' 
+  rp_seq_plus_nbp <- as.character(Biostrings::getSeq(GRCm39, 
+                                                     names = rp_seq_match$chr, 
+                                                     start = as.integer(rp_seq_match$start), 
+                                                     end = as.integer(rp_seq_match$end) + n_bps_to_align))
+  
+} else if (rev_primer == find_reverse_complement(rp_getSeq)) { # rev_primer is in 3' to 5' direction
+  
+  rp_direction <- '3to5'
+  rp_seq_plus_nbp <- as.character(Biostrings::getSeq(GRCm39, 
+                                                     names = rp_seq_match$chr, 
+                                                     start = as.integer(rp_seq_match$start) - n_bps_to_align, 
+                                                     end = as.integer(rp_seq_match$end)))
+  
+} else {
+  stop("check rev_primer sequence that neither itself nor its reverse complement can find exact match in GRCm39!")
+}
+
+
+for (idx in 1:length(filtered_seqs_all)) {
+  
+  s <- filtered_seqs_all[idx]
+  
+  ## find locations of fwd_/rev_primers and their reverse complements in s
+  fp_location_in_s <- find_seq_location_in_amplicon(fwd_primer, s, allow_one_N = T)
+  rp_location_in_s <- find_seq_location_in_amplicon(rev_primer, s, allow_one_N = T)
+  
+  rc_fp_location_in_s <- find_seq_location_in_amplicon(find_reverse_complement(fwd_primer), s, allow_one_N = T)
+  rc_rp_location_in_s <- find_seq_location_in_amplicon(find_reverse_complement(rev_primer), s, allow_one_N = T)
+  
+  ## if s begins with fwd_primer (allowing one N in primer seq)
+  if (!is.na(fp_location_in_s) & fp_location_in_s == 1) {
+    
+    print(paste0("seq ", idx, " begins with fwd_primer"))
+    
+    # check if n_bps_to_align next to primer can be perfectly aligned (allowing one N) or not
+    if (fp_direction == "5to3") { # if fwd_primer direction is 5' to 3'
+      
+      tmp_seq <- fp_seq_plus_nbp
+      
+    } else { # if fwd_primer direction is 3' to 5'
+      
+      tmp_seq <- find_reverse_complement(fp_seq_plus_nbp)
+      
+    }
+    
+    # check if tmp_seq equals to or not substr(s, 1, nchar(tmp_seq))
+    if (tmp_seq == substr(s, 1, nchar(tmp_seq))) { # tmp_seq matches
+      
+      filtered_seqs_all_qc <- c(filtered_seqs_all_qc, s)
+      print(paste0("initial subseq fully aligns"))
+      
+    } else { # tmp_seq doesn't match -> primer dimer
+      
+      print(paste0("initial subseq doesn't not align, likely a primer dimer: ", tmp_seq, " vs ", substr(s, 1, nchar(tmp_seq))))
+      count_primer_dimers <- count_primer_dimers + 1
+      
+    }
+    
+    # move to next sequence
+    next 
+    
+  }
+  
+  
+  ## if s begins with rev_primer (allowing one N in primer seq)
+  if (!is.na(rp_amp_location) & fp_amp_location == 1) {
+    
+    print(paste0("seq ", idx, " begins with rev_primer"))
+    
+    # check if n_bps_to_align next to primer can be perfectly aligned or not
+    
+    if (rp_direction == "5to3") { # if rev_primer direction is 5to3
+      
+      tmp_seq <- rp_seq_plus_nbp
+      
+    }
+    
+  }
+  
+  
+  ## if s begins with reverse complement of fwd_primer
+  
+  
+  
+  ## if s begins with reverse complement of rev_primer
+  
+  
+  
+  ## if s ends with fwd_primer
+  
+  
+  
+  ## if s ends with rev_primer
+  
+  
+  
+  ## if s ends with reverse complement of fwd_primer
+  
+  
+  
+  ## is s ends with reverse complement of rev_primer
+  
   
 }
 
@@ -348,3 +535,7 @@ create_fastq_file_from_seqs(filtered_seqs_all, output_file_name = paste0(data_fo
 
 
 
+
+
+
+"GGAATGCTCTCTTCTCGCCTCTTTCAGTATCTGTACACACAGAAGTGATAAAAATAAATCTAAATATATTAAATAAATATATGGAGGTGGAGCTCACATTAAATTGGTAGTAACTTAAGAGGAAATTTAAAAATATCTATTACTCTACCAGCACAGAAGACATACAAGACTAACCTGAAGTCGTCCATCCAATGTTCTCTGTATGGTGACACACTTGCTAGGATGAGCTCCATTTGTAGTTATAGCTGTTATTAAAGAATCCAATTCATCTTTTTTCTCTTTCAGCTTCTTTACCAAACTCTCAATTGCTCTTTTTGCAAAGGTTTCACTTTCCCCACCTTGTCTATGACACATCAAACTATGTACAATGCTCAGACAGGCATCGTTACTTGTTGGTGTATTTGTTATAGACATATTGTCCATTTGTTCAAGTTTTTTCTTTTAAATCCAACTCTCCAATTTCTGGAGTAATTTTGATCTTTTGAAGGCAGTGAAAACCAATGGCCAATGTTGCAAGAAAAACTGTCAAGACATCTGGTGAGCAGGATGACCTAAGAAAGAAAAAGAGACATGAGAACACATTTCACAAGGTAGATACAATTATTTGGGGAAGAAAAACTGTTCCATTTAAGTCAAAAGACTCAATGCCCATAGTTTTAAAAATGCTTAAAGTTTGAAATGGCTTAATTATAAAATAAAGCTAGTTTTGATACTCCAAAACCATTATAAATTCCGGTCTCCTCACTATTGCAAAGGCATACTAAATAAAGTCTTACCAAATGTGCCTTTACCTCAAACTCTTCCTTAGCTATTTCCTTAGTTATTTATTAGAACTCATACTGAGCACTGGTGTTTAGCATTCACTTCTGTGAAGCAGTAGTTCCCACCCTTCCTAGCGCTGCAACCCTCTGATACAGTTCTTCAAGTTGTGATGACCCCCAATCATAAAATTATTTCGTTGCTACTTCCTAACTGTAATTTTGCTACTGTTGTGAATCATAATGTAACTATCTGATACCCATGGTATCTGATTCGCAACCCCAGTGAAAGGGCCGTTCAGCCTTCAGAGGGGGTCACAGCCCATAGGCTGAAACTGCTGCACTAAAGGTATTTTTAAAATGCTTCTCAACTCATTATACCCCACATAAAGAAGCAAATTTCATGTCTGTCAATAGTTATCACTTACTCATATGTATAAACATAAATAAAAAGATGAAACAAGGTCTTACTCCATGCTGGCC"
