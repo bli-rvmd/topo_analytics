@@ -2,8 +2,8 @@
 # Begin setting runtime parameters
 #################
 
-fwd_primer <- toupper("caggtgatgatgatgggcaacgttca")
-rev_primer <- toupper("agcggaacgcaaatatcgcacgatg")
+fwd_primer <- toupper("acctccagcgtattctggtagtccagagtggatg")
+rev_primer <- toupper("gcactcttaacagctgagccacgtct")
 
 #################
 # End setting runtime parameters

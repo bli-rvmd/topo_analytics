@@ -7,9 +7,9 @@
 # min frequency alleles to keep (by default 0.5%) 
 min_perc_reads <- 0.5 
 
-allelic_freq_table_txt <- "/Users/bli/Docker/20241011_Cellecta_NGS_cdkn2a_cic/cdkn2a_low_sorted/CRISPResso_on_16_S16_R1_001/Alleles_frequency_table_around_sgRNA_CGGTGCAGATTCGAACTGCG.txt"
+allelic_freq_table_txt <- "/Users/bli/Docker/20241106_Cellecta_order_101888/topo_cdkn2a_pop-out_68_clone_1/CRISPResso_on_clone_1_filtered_seqs_all/Alleles_frequency_table_around_sgRNA_taagccgaactgggattgtg.txt"
 
-output_vcf <- "/Users/bli/Docker/20241011_Cellecta_NGS_cdkn2a_cic/cdkn2a_low_sorted/CRISPResso_on_16_S16_R1_001/VCF_Alleles_frequency_table_around_sgRNA_CGGTGCAGATTCGAACTGCG.vcf"
+output_vcf <- "/Users/bli/Docker/20241106_Cellecta_order_101888/topo_cdkn2a_pop-out_68_clone_1/CRISPResso_on_clone_1_filtered_seqs_all/VCF_Alleles_frequency_table_around_sgRNA_taagccgaactgggattgtg.vcf"
 
 #########
 # End setting runtime parameters
@@ -356,33 +356,39 @@ df_af_unedited <- df_af %>%
 n_unedited_reads <- 0
 max_allowed_Ns <- 2
 
-for (idx in 1:nrow(df_af_unedited)) {
+
+if (nrow(df_af_unedited) > 0) { # if there exists any unedited reads
   
-  ## define ref and mutated seqs
-  mutated <- DNAString(df_af_unedited$Aligned_Sequence[idx])
-  reference <- DNAString(df_af_unedited$Reference_Sequence[idx])
-  
-  # find index of sgRNA in reference seq (either in sgRNA_seq or in reverse complement of sgRNA_seq)
-  sg_idx_in_ref <- Biostrings::matchPattern(sgRNA_seq, reference)
-  if (length(sg_idx_in_ref) == 0) {
+  for (idx in 1:nrow(df_af_unedited)) {
     
-    sg_idx_in_ref <- Biostrings::matchPattern(Biostrings::reverseComplement(Biostrings::DNAString(sgRNA_seq)), reference)
+    ## define ref and mutated seqs
+    mutated <- DNAString(df_af_unedited$Aligned_Sequence[idx])
+    reference <- DNAString(df_af_unedited$Reference_Sequence[idx])
     
-  }
-  
-  start_idx <- start(sg_idx_in_ref) 
-  end_idx <- end(sg_idx_in_ref)
-  
-  # obtain mutated and ref seqs around sgRNA
-  sg_mut_seq <- substr(as.character(mutated), start_idx, end_idx)
-  
-  count_N <- stringr::str_count(sg_mut_seq, "N")
-  
-  if (count_N <= max_allowed_Ns) {
-    n_unedited_reads <- n_unedited_reads + df_af_unedited[idx, "n_reads"]
+    # find index of sgRNA in reference seq (either in sgRNA_seq or in reverse complement of sgRNA_seq)
+    sg_idx_in_ref <- Biostrings::matchPattern(sgRNA_seq, reference)
+    if (length(sg_idx_in_ref) == 0) {
+      
+      sg_idx_in_ref <- Biostrings::matchPattern(Biostrings::reverseComplement(Biostrings::DNAString(sgRNA_seq)), reference)
+      
+    }
+    
+    start_idx <- start(sg_idx_in_ref) 
+    end_idx <- end(sg_idx_in_ref)
+    
+    # obtain mutated and ref seqs around sgRNA
+    sg_mut_seq <- substr(as.character(mutated), start_idx, end_idx)
+    
+    count_N <- stringr::str_count(sg_mut_seq, "N")
+    
+    if (count_N <= max_allowed_Ns) {
+      n_unedited_reads <- n_unedited_reads + df_af_unedited[idx, "n_reads"]
+    }
+    
   }
   
 }
+
 
 # n_unedited_reads <- sum(as.integer(df_af_unedited$n_reads))
 

@@ -4,13 +4,13 @@
 # Begin setting runtime parameters
 #########
 
-vcf_file <- "/Users/bli/Docker/20241011_Cellecta_NGS_cdkn2a_cic/cdkn2a_low_sorted/CRISPResso_on_16_S16_R1_001/VCF_Alleles_frequency_table_around_sgRNA_CGGTGCAGATTCGAACTGCG.vcf"
+vcf_file <- "/Users/bli/Docker/20241106_Cellecta_order_101888/topo_cdkn2a_pop-out_68_clone_1/CRISPResso_on_clone_1_filtered_seqs_all/VCF_Alleles_frequency_table_around_sgRNA_taagccgaactgggattgtg.vcf"
 
-vep_file <- "/Users/bli/Docker/20241011_Cellecta_NGS_cdkn2a_cic/cdkn2a_low_sorted/CRISPResso_on_16_S16_R1_001/VEP_Alleles_frequency_table_around_sgRNA_CGGTGCAGATTCGAACTGCG.txt"
+vep_file <- "/Users/bli/Docker/20241106_Cellecta_order_101888/topo_cdkn2a_pop-out_68_clone_1/CRISPResso_on_clone_1_filtered_seqs_all/VEP_Alleles_frequency_table_around_sgRNA_taagccgaactgggattgtg.txt"
 
 gene_symbol <- "Cdkn2a"
 
-output_summary_xlsx_file <- "/Users/bli/Docker/20241011_Cellecta_NGS_cdkn2a_cic/cdkn2a_low_sorted/CRISPResso_on_16_S16_R1_001/cellecta_cdkn2a_low_sorted_ngs_sequencing_validation_analysis_report.xlsx"
+output_summary_xlsx_file <- "/Users/bli/Docker/20241106_Cellecta_order_101888/topo_cdkn2a_pop-out_68_clone_1/CRISPResso_on_clone_1_filtered_seqs_all/cdkn2a_clone1_analysis_report.xlsx"
 
 #########
 # End setting runtime parameters
