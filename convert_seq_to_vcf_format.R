@@ -7,9 +7,9 @@
 # min frequency alleles to keep (by default 0.5%) 
 min_perc_reads <- 0.5 
 
-allelic_freq_table_txt <- "/Users/bli/Docker/20241106_Cellecta_order_101888/topo_cdkn2a_pop-out_68_clone_1/CRISPResso_on_clone_1_filtered_seqs_all/Alleles_frequency_table_around_sgRNA_taagccgaactgggattgtg.txt"
+allelic_freq_table_txt <- "/Users/bli/Docker/20241106_Cellecta_order_101888/smad4_ko_clone_12/CRISPResso_on_GTAAGGCATA_R1/Alleles_frequency_table_around_sgRNA_TGTCACCATACAGAGAACAT.txt"
 
-output_vcf <- "/Users/bli/Docker/20241106_Cellecta_order_101888/topo_cdkn2a_pop-out_68_clone_1/CRISPResso_on_clone_1_filtered_seqs_all/VCF_Alleles_frequency_table_around_sgRNA_taagccgaactgggattgtg.vcf"
+output_vcf <- "/Users/bli/Docker/20241106_Cellecta_order_101888/smad4_ko_clone_12/CRISPResso_on_GTAAGGCATA_R1/VCF_Alleles_frequency_table_around_sgRNA_TGTCACCATACAGAGAACAT.vcf"
 
 #########
 # End setting runtime parameters

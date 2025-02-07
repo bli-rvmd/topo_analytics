@@ -4,13 +4,13 @@
 # Begin setting runtime parameters
 #########
 
-vcf_file <- "/Users/bli/Docker/20241106_Cellecta_order_101888/topo_cdkn2a_pop-out_68_clone_1/CRISPResso_on_clone_1_filtered_seqs_all/VCF_Alleles_frequency_table_around_sgRNA_taagccgaactgggattgtg.vcf"
+vcf_file <- "/Users/bli/Docker/20241106_Cellecta_order_101888/smad4_ko_clone_12/CRISPResso_on_GTAAGGCATA_R1/VCF_Alleles_frequency_table_around_sgRNA_TGTCACCATACAGAGAACAT.vcf"
 
-vep_file <- "/Users/bli/Docker/20241106_Cellecta_order_101888/topo_cdkn2a_pop-out_68_clone_1/CRISPResso_on_clone_1_filtered_seqs_all/VEP_Alleles_frequency_table_around_sgRNA_taagccgaactgggattgtg.txt"
+vep_file <- "/Users/bli/Docker/20241106_Cellecta_order_101888/smad4_ko_clone_12/CRISPResso_on_GTAAGGCATA_R1/VEP_Alleles_frequency_table_around_sgRNA_TGTCACCATACAGAGAACAT.txt"
 
-gene_symbol <- "Cdkn2a"
+gene_symbol <- "Smad4"
 
-output_summary_xlsx_file <- "/Users/bli/Docker/20241106_Cellecta_order_101888/topo_cdkn2a_pop-out_68_clone_1/CRISPResso_on_clone_1_filtered_seqs_all/cdkn2a_clone1_analysis_report.xlsx"
+output_summary_xlsx_file <- "/Users/bli/Docker/20241106_Cellecta_order_101888/smad4_ko_clone_12/CRISPResso_on_GTAAGGCATA_R1/smad4_clone12_analysis_report.xlsx"
 
 #########
 # End setting runtime parameters

@@ -3,14 +3,14 @@
 ##############
 
 ## data folder 
-data_folder <- "./data/20241219_Cellecta_Order_102394_Cdkn2a_pop-out/"
-sub_data_folder <- "clone_11"
-# delim_clone <- c("_1-", "_M13-") ## delimiters identifying clone number
-delim_clone <- c("-11\\.", "_T[3|7]_")
+data_folder <- "./data/ElimBio_Order_871831_20250127_TOPO_KPTC_Barcoding/"
+sub_data_folder <- "pcr_104"
+delim_clone <- c("_10-", "_M13-") ## delimiters identifying clone number
+# delim_clone <- c("-11\\.", "_T[3|7]_")
 
 ## PCR primers 
-fwd_primer <- toupper("acctccagcgtattctggta")
-rev_primer <- toupper("gcactcttaacagctgagcc")
+fwd_primer <- toupper("ACACTCTTTCCCTACACGA")
+rev_primer <- toupper("GTGACTGGAGTTCAGACG")
 
 # # if no trimming - use these
 # fwd_primer <- strrep("T", 100)
